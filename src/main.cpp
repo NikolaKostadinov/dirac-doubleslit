@@ -6,21 +6,22 @@
 
 #include "../include/Griddy/griddy.h"
 #include "../include/Griddy/SDL2/SDL.h"
-#include "../include/Griddy/SDL2/SDL_image.h"
 #include <iostream>
 #include <cmath>
 
 int main(int argc, char* args[])
 {
-    Base       xBase = Base(START_X, SIZE_X, END_X);
-    Base       yBase = Base(START_Y, SIZE_Y, END_Y);
-    Basis2*    basis = new Basis2(xBase, yBase)    ;
-    Scalar2*   u     = new Scalar2(basis)          ;
-    WaveFunc2* psi   = new WaveFunc2(basis)        ;
+    griddy::testVideo();                                    // test SDL
 
-    float          potnVals[SIZE_X][SIZE_Y];
-    Complex        probAmps[SIZE_X][SIZE_Y];
-    griddy::Vertex vertices[SIZE_X][SIZE_Y];
+    Base*      xBase = new Base(START_X, SIZE_X, END_X);    // x base
+    Base*      yBase = new Base(START_Y, SIZE_Y, END_Y);    // y base
+    Basis2*    basis = new Basis2(xBase, yBase)        ;    // 2D basis
+    Scalar2*   field = new Scalar2(basis)              ;    // potential field AKA the slits
+    WaveFunc2* psi   = new WaveFunc2(basis)            ;    // the wave function AKE the "particle"
+
+    float         fieldVals[SIZE_X][SIZE_Y];                // values for the potential field
+    Complex        probAmps[SIZE_X][SIZE_Y];                // values for the wave function
+    griddy::Vertex vertices[SIZE_X][SIZE_Y];                // the "pixels" of the screen
     
     griddy::Window window = griddy::Window(
         WINDOW_TITLE ,
@@ -30,7 +31,7 @@ int main(int argc, char* args[])
 
     griddy::Grid grid = griddy::Grid(&window);
 
-    SDL_Rect rectGrid = SDL_Rect();
+    SDL_Rect rectGrid = SDL_Rect();                         // position of the grid on the window (null position)
     rectGrid.x = 0                ;
     rectGrid.y = 0                ;
     rectGrid.w = WINDOW_WIDTH     ;
@@ -40,21 +41,25 @@ int main(int argc, char* args[])
     grid.setPosition(rectGrid);
     grid.setSize(SIZE_X, SIZE_Y);
 
-    u  ->setValues(&potnVals[0][0]);
-    psi->setValues(&probAmps[0][0]);
-
-    psi->setNorm(MAX_COLOR);
-    psi->setMass(1.0f);
+    field->setValues(&fieldVals[0][0]);
+    psi  ->setValues(& probAmps[0][0]);
+    psi  ->setNorm  (MAX_COLOR);
+    psi  ->setMass  (MASS);
 
     for (int i = 0; i < SIZE_X; i++)
         for (int j = 0; j < SIZE_Y; j++)
         {
-            float x = xBase(i) - INIT_X;
-            float y = yBase(j) - INIT_Y;
+            float x = xBase->coord(i) - INIT_X;
+            float y = yBase->coord(j) - INIT_Y;
 
-            probAmps[i][j] = Real(exp((-x*x-y*y) / DEV)) * cis(MOMENTUM_X * x + MOMENTUM_Y * y);
-            potnVals[i][j] = 0.5f;
+            probAmps[i][j] = Real(exp((-x*x-y*y) / DEV)) * cis(- MOMENTUM_X * x - MOMENTUM_Y * y);
             vertices[i][j] = griddy::Vertex(i, j);
+
+            if (true)
+            {
+                fieldVals[i][j] = 1.0f;
+            }
+            else fieldVals[i][j] = 0.0f;
         }
 
     SDL_Event event;
@@ -66,7 +71,7 @@ int main(int argc, char* args[])
 
         window.clear();
 
-        psi->evolve(DT, u);
+        psi->evolve(DT, field);
         float factor = psi->prbFactor(); 
         for (int i = 0; i < SIZE_X; i++)
             for (int j = 0; j < SIZE_Y; j++)
