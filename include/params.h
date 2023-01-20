@@ -17,12 +17,12 @@
 
 #define INIT_X          0.0f
 #define INIT_Y          0.0f
-#define DEV             4.0f
+#define DEV             6.0f
 #define MOMENTUM_X      1000000.0f
 #define MOMENTUM_Y      0.0f
 #define MASS            0.1f
 
-#define DELTA_SLIT      2u
+#define DELTA_SLIT      5u
 #define WIDTH_SLIT      3u
 #define SLIT_I          24u
 #define DELTA_SLITS     1u

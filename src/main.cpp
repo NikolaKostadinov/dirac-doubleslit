@@ -59,10 +59,10 @@ int main(int argc, char* args[])
 
             uint32_t slit_j = (SIZE_Y - DELTA_SLIT) / 2;
             if (
-                i > SLIT_I              &&
-                i < SLIT_I + WIDTH_SLIT &&
-                j < slit_j              &&
-                j > slit_j + DELTA_SLIT
+                (i > SLIT_I              &&
+                i < SLIT_I + WIDTH_SLIT) &&
+                !(j > slit_j              &&
+                j < slit_j + DELTA_SLIT)
             )    fieldVals[i][j] = POTENTIAL;
             else fieldVals[i][j] = 0.0f;
         }
