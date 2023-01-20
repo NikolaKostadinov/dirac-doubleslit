@@ -46,6 +46,8 @@ int main(int argc, char* args[])
     psi  ->setNorm  (MAX_COLOR);
     psi  ->setMass  (MASS);
 
+    float dx = xBase->delta();
+    float dy = yBase->delta();
     for (int i = 0; i < SIZE_X; i++)
         for (int j = 0; j < SIZE_Y; j++)
         {
@@ -55,9 +57,12 @@ int main(int argc, char* args[])
             probAmps[i][j] = Real(exp((-x*x-y*y) / DEV)) * cis(- MOMENTUM_X * x - MOMENTUM_Y * y);
             vertices[i][j] = griddy::Vertex(i, j);
 
+            uint32_t slit_j = (SIZE_Y - DELTA_SLIT) / 2;
             if (
-                x > SLIT_X &&
-                x < SLIT_X + WIDTH_SLIT
+                i > SLIT_I              &&
+                i < SLIT_I + WIDTH_SLIT &&
+                j < slit_j              &&
+                j > slit_j + DELTA_SLIT
             )    fieldVals[i][j] = POTENTIAL;
             else fieldVals[i][j] = 0.0f;
         }
@@ -72,11 +77,12 @@ int main(int argc, char* args[])
         window.clear();
 
         psi->evolve(DT, field);
-        float factor = psi->prbFactor(); 
+
+        float factor = psi->prbFactor();
         for (int i = 0; i < SIZE_X; i++)
             for (int j = 0; j < SIZE_Y; j++)
             {
-                if (fieldVals[i][j] == 0.0f)
+                if (fieldVals[j][i] == 0.0f)
                 {
                     float thisProb = factor * psi->prob(i, j, false);
                     griddy::color thisColor = griddy::Color(0x00, thisProb, 0x00);
