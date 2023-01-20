@@ -20,9 +20,11 @@
 #define DEV             4.0f
 #define MOMENTUM_X      1000000.0f
 #define MOMENTUM_Y      0.0f
-#define MASS            0.08f
+#define MASS            0.1f
 
 #define DELTA_SLIT      2u
 #define WIDTH_SLIT      2u
 #define SLIT_X          10.0f
 #define DELTA_SLITS     1u
+
+#define POTENTIAL       100.0f

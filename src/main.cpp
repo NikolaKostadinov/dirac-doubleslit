@@ -55,10 +55,10 @@ int main(int argc, char* args[])
             probAmps[i][j] = Real(exp((-x*x-y*y) / DEV)) * cis(- MOMENTUM_X * x - MOMENTUM_Y * y);
             vertices[i][j] = griddy::Vertex(i, j);
 
-            if (true)
-            {
-                fieldVals[i][j] = 1.0f;
-            }
+            if (
+                x > SLIT_X &&
+                x < SLIT_X + WIDTH_SLIT
+            )    fieldVals[i][j] = POTENTIAL;
             else fieldVals[i][j] = 0.0f;
         }
 
@@ -76,9 +76,17 @@ int main(int argc, char* args[])
         for (int i = 0; i < SIZE_X; i++)
             for (int j = 0; j < SIZE_Y; j++)
             {
-                float thisProb = factor * psi->prob(i, j, false);
-                griddy::color thisColor = griddy::Color(0x00, thisProb, 0x00);
-                vertices[i][j].setColor(thisColor);
+                if (fieldVals[i][j] == 0.0f)
+                {
+                    float thisProb = factor * psi->prob(i, j, false);
+                    griddy::color thisColor = griddy::Color(0x00, thisProb, 0x00);
+                    vertices[i][j].setColor(thisColor);
+                }
+                else
+                {
+                    griddy::color thisColor = griddy::Color(0x0a, 0x0a, 0x0a);
+                    vertices[i][j].setColor(thisColor);
+                }
             }
         grid.render();
 
