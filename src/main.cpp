@@ -90,7 +90,7 @@ int main(int argc, char* args[])
                 }
                 else
                 {
-                    griddy::color thisColor = griddy::Color(0x0a, 0x0a, 0x0a);
+                    griddy::color thisColor = griddy::Color(POTENTIAL_R, POTENTIAL_G, POTENTIAL_B);
                     vertices[i][j].setColor(thisColor);
                 }
             }
