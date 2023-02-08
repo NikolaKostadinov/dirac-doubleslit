@@ -57,12 +57,15 @@ int main(int argc, char* args[])
             probAmps[i][j] = Real(exp((-x*x-y*y) / DEV)) * cis(- MOMENTUM_X * x - MOMENTUM_Y * y);
             vertices[i][j] = griddy::Vertex(i, j);
 
-            uint32_t slit_j = (SIZE_Y - DELTA_SLIT) / 2;
+            uint32_t upperSlitJ = (SIZE_Y - DELTA_SLITS) / 2 - DELTA_SLIT;
+            uint32_t lowerSlitJ = (SIZE_Y + DELTA_SLITS) / 2             ;
             if (
-                 (i > SLIT_I               &&
-                  i < SLIT_I + WIDTH_SLIT) &&
-                !(j > slit_j               &&
-                  j < slit_j + DELTA_SLIT)
+                  i > SLIT_I                  &&
+                  i < SLIT_I + WIDTH_SLIT     &&
+                ( j < upperSlitJ              ||
+                  j > lowerSlitJ + DELTA_SLIT ||
+                 (j > upperSlitJ + DELTA_SLIT &&
+                  j < lowerSlitJ))
             )    fieldVals[i][j] = POTENTIAL;
             else fieldVals[i][j] = 0.0f;
         }

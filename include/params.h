@@ -23,9 +23,9 @@
 #define MASS            0.1f
 
 #define DELTA_SLIT      2u
-#define WIDTH_SLIT      2u
+#define WIDTH_SLIT      6u
 #define SLIT_I          24u
-#define DELTA_SLITS     1u
+#define DELTA_SLITS     4u
 
 #define POTENTIAL       10.0f
 #define POTENTIAL_R     0x0a
