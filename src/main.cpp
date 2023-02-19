@@ -71,33 +71,40 @@ int main(int argc, char* args[])
         }
 
     SDL_Event event;
+
     while (window.isRunning)
     {
-        while ( SDL_PollEvent(&event) )
+        while (SDL_PollEvent(&event))
             if (event.type == SDL_QUIT)
-                window.destroy();
-
-        window.clear();
-
-        psi->evolve(DT, field);
-
-        float factor = psi->prbFactor();
-        for (int i = 0; i < SIZE_X; i++)
-            for (int j = 0; j < SIZE_Y; j++)
             {
-                if (fieldVals[j][i] == 0.0f)
-                {
-                    float thisProb = factor * psi->prob(i, j, false);
-                    griddy::color thisColor = griddy::Color(0x00, thisProb, 0x00);
-                    vertices[i][j].setColor(thisColor);
-                }
-                else
-                {
-                    griddy::color thisColor = griddy::Color(POTENTIAL_R, POTENTIAL_G, POTENTIAL_B);
-                    vertices[i][j].setColor(thisColor);
-                }
+                window.destroy();
+                return 1;
             }
-        grid.render();
+        
+        window.clear();
+        
+        if (true)
+        {
+            psi->evolve(DT, field);
+
+            float factor = psi->prbFactor();
+            for (int i = 0; i < SIZE_X; i++)
+                for (int j = 0; j < SIZE_Y; j++)
+                {
+                    if (fieldVals[j][i] == 0.0f)
+                    {
+                        float thisProb = factor * psi->prob(i, j, false);
+                        griddy::color thisColor = griddy::Color(0x00, thisProb, 0x00);
+                        vertices[i][j].setColor(thisColor);
+                    }
+                    else
+                    {
+                        griddy::color thisColor = griddy::Color(POTENTIAL_R, POTENTIAL_G, POTENTIAL_B);
+                        vertices[i][j].setColor(thisColor);
+                    }
+                }
+            grid.render();
+        }
 
         window.display();
     }
